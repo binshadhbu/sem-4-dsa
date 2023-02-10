@@ -49,7 +49,6 @@ void findsum(node * root,int *sum){
         findsum(root->left,sum);
         findsum(root->right,sum);
     }
-
 }
 void solve(node *root,int *check,int *count){
     if(root!=NULL){
@@ -66,14 +65,7 @@ int main() {
     node *root = buildTree(A);
     int x,y;
     scanf("%d%d",&x,&y);
-
      inorderTraversal(root,x,y);
-    // int check=0;
-    // int count=0;
-    // scanf("%d",&check);
-    // solve(root,&check,&count);
-    // // findsum(root,&count);
-    // printf("%d",count);
     printf("\n");
     return 0;
 }
