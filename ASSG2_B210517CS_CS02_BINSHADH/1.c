@@ -26,8 +26,12 @@ node * create(char * name,char * roll,int age){
 }
 
 void insert(st * groups,node * root,int index){
-    
-
+    if(groups->gps[index]==NULL){
+        groups->gps[index]=root;
+        root->next=groups->gps[index];
+        groups->heads[index]=root;
+        return ;
+    }
 
 }
 
