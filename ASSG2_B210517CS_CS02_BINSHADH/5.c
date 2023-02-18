@@ -19,151 +19,115 @@ struct Tree
 };
 typedef struct Tree *tree;
 
-node CREATE_NODE(int k)
-{
-    node ele;
-    ele = (node)malloc(sizeof(struct Node));
-    ele->key = k;
-    ele->right = NULL;
-    ele->left = NULL;
-    ele->height = 0;
-    return ele;
-}
 
-int FINDHEIGHT(node pre)
+int height(node root)
 {
-    int lh, rh;
-    if ((pre)->left == NULL)
-    {
-        lh = -1;
-    }
-    else
-    {
-        lh = (pre)->left->height;
-    }
-    if ((pre)->right == NULL)
-    {
-        rh = -1;
-    }
-    else
-    {
-        rh = (pre)->right->height;
-    }
+    int lh=-1, rh=-1;
+    if(root->left)lh=root->left->height;
+    if(root->right)lh=root->right->height;
     return lh > rh ? lh + 1 : rh + 1;
 }
 
-int GETBALANCE(node ele)
+int balance_factor(node root)
 {
-    if (ele == NULL)
+    if (root == NULL)
         return -1;
-    int lh, rh;
-    if (ele->left == NULL)
-    {
-        lh = -1;
-    }
-    else
-    {
-        lh = ele->left->height;
-    }
-    if (ele->right == NULL)
-    {
-        rh = -1;
-    }
-    else
-    {
-        rh = ele->right->height;
-    }
+    int lh=-1, rh=-1;
+    if(root->left)lh=root->left->height;
+    if(root->right)lh=root->right->height;
     return lh - rh;
 }
 
-void ROTATE_LEFT(node *pre)
+void RL(node *root)
 {
-    node ne = (*pre)->right;
-    (*pre)->right = ne->left;
-    ne->left = *pre;
-    (*pre)->height = FINDHEIGHT(*pre);
-    ne->height = FINDHEIGHT(ne);
-    *pre = ne;
+    node ne = (*root)->right;
+    (*root)->right = ne->left;
+    ne->left = *root;
+    (*root)->height = height(*root);
+    ne->height = height(ne);
+    *root = ne;
 }
 
-void ROTATE_RIGHT(node *pre)
+void RR(node *root)
 {
-    node ne = (*pre)->left;
-    (*pre)->left = ne->right;
-    ne->right = *pre;
-    (*pre)->height = FINDHEIGHT(*pre);
-    ne->height = FINDHEIGHT(ne);
-    *pre = ne;
+    node ne = (*root)->left;
+    (*root)->left = ne->right;
+    ne->right = *root;
+    (*root)->height = height(*root);
+    ne->height = height(ne);
+    *root = ne;
 }
 
 node SEARCH(tree t, int k)
 {
-    node present;
-    present = t->root;
-    while (present != NULL && present->key != k)
+    node root=NULL;
+    root = t->root;
+    if(!root)return root;
+    while (root->key != k)
     {
-        if (present->key > k)
+        if (root->key > k)
         {
-            present = present->left;
+            root = root->left;
         }
         else
         {
-            present = present->right;
+            root = root->right;
         }
     }
-    return present;
+    return root;
 }
 
-void INSERT(node *pre, node ele)
+void insert(node *root, node ele)
 {
-    if (*pre == NULL)
+    if (*root == NULL)
     {
-        *pre = ele;
+        *root = ele;
         return;
     }
-    if ((*pre)->key == ele->key)
+    if ((*root)->key == ele->key)
     {
         return;
     }
-    if ((*pre)->key > ele->key)
+    if ((*root)->key > ele->key)
     {
-        INSERT(&((*pre)->left), ele);
-        if (GETBALANCE(*pre) == 2)
+        insert(&((*root)->left), ele);
+        if (balance_factor(*root) == 2)
         {
-            if (GETBALANCE((*pre)->left) == 1)
+            if (balance_factor((*root)->left) == 1)
             {
-                ROTATE_RIGHT(pre);
+                RR(root);
             }
             else
             {
-                ROTATE_LEFT(&((*pre)->left));
-                ROTATE_RIGHT(pre);
+                RL(&((*root)->left));
+                RR(root);
             }
         }
     }
     else
     {
-        INSERT(&((*pre)->right), ele);
-        if (GETBALANCE(*pre) == -2)
+        insert(&((*root)->right), ele);
+        if (balance_factor(*root) == -2)
         {
-            if (GETBALANCE((*pre)->right) == -1)
+            if (balance_factor((*root)->right) == -1)
             {
-                ROTATE_LEFT(pre);
+                RL(root);
             }
             else
             {
-                ROTATE_RIGHT(&((*pre)->right));
-                ROTATE_LEFT(pre);
+                RR(&((*root)->right));
+                RL(root);
             }
         }
     }
-    (*pre)->height = FINDHEIGHT(*pre);
+    (*root)->height = height(*root);
     return;
 }
 
-node MAXIMUM(node ele)
+node MAXIMUM(node root)
 {
-    node req = ele;
+    node req = root;
+    if(root==NULL)return NULL;
     while (req->right != NULL)
     {
         req = req->right;
@@ -171,28 +135,22 @@ node MAXIMUM(node ele)
     return req;
 }
 
-node DELETENODE(node ele, int k)
+node delete(node ele, int k)
 {
     if (ele == NULL)
         return ele;
     if (ele->key < k)
-        ele->right = DELETENODE(ele->right, k);
+        ele->right = delete(ele->right, k);
     else if (ele->key > k)
-        ele->left = DELETENODE(ele->left, k);
+        ele->left = delete(ele->left, k);
     else
     {
         if (ele->left == NULL || ele->right == NULL)
         {
             node cur;
-            if (ele->left)
-            {
-                cur = ele->left;
-            }
-            else
-            {
-                cur = ele->right;
-            }
-            if (cur == NULL)
+            cur=ele->left?cur=ele->left:ele->right;
+            
+            if (!cur)
             {
                 cur = ele;
                 ele = NULL;
@@ -206,31 +164,31 @@ node DELETENODE(node ele, int k)
         {
             node pre = MAXIMUM(ele->left);
             ele->key = pre->key;
-            ele->left = DELETENODE(ele->left, ele->key);
+            ele->left = delete(ele->left, ele->key);
         }
     }
     if (ele == NULL)
         return ele;
-    ele->height = FINDHEIGHT(ele);
-    if (GETBALANCE(ele) > 1 && GETBALANCE(ele->left) >= 0)
+    ele->height = height(ele);
+    if (balance_factor(ele) > 1 && balance_factor(ele->left) >= 0)
     {
-        ROTATE_RIGHT(&ele);
+        RR(&ele);
     }
-    if (GETBALANCE(ele) > 1 && GETBALANCE(ele->left) < 0)
+    if (balance_factor(ele) > 1 && balance_factor(ele->left) < 0)
     {
-        ROTATE_LEFT(&(ele->left));
-        ROTATE_RIGHT(&ele);
+        RL(&(ele->left));
+        RR(&ele);
         return ele;
     }
-    if (GETBALANCE(ele) < -1 && GETBALANCE(ele->right) <= 0)
+    if (balance_factor(ele) < -1 && balance_factor(ele->right) <= 0)
     {
-        ROTATE_LEFT(&ele);
+        RL(&ele);
         return ele;
     }
-    if (GETBALANCE(ele) < -1 && GETBALANCE(ele->right) > 0)
+    if (balance_factor(ele) < -1 && balance_factor(ele->right) > 0)
     {
-        ROTATE_RIGHT(&(ele->right));
-        ROTATE_LEFT(&ele);
+        RR(&(ele->right));
+        RL(&ele);
         return ele;
     }
     return ele;
@@ -272,8 +230,12 @@ int main()
         case 'i':
         {
             scanf(" %d", &k);
-            node ne = CREATE_NODE(k);
-            INSERT(&(t->root), ne);
+            node ne=(node )malloc(sizeof(struct Node));
+            ne->key=k;
+            ne->right=ne->left=NULL;
+            ne->height=0;
+           
+            insert(&(t->root), ne);
             break;
         }
         case 's':
@@ -296,7 +258,7 @@ int main()
             node pre = SEARCH(t, k);
             if (pre != NULL)
             {
-                t->root = DELETENODE(t->root, k);
+                t->root = delete(t->root, k);
                 printf("%d\n", k);
             }
             else
@@ -316,7 +278,7 @@ int main()
             }
             else
             {
-                printf("%d\n", GETBALANCE(ele));
+                printf("%d\n", balance_factor(ele));
             }
             break;
         }
