@@ -5,67 +5,81 @@
 #include <ctype.h>
 #define MAX 10000
 
-struct node {
+struct node *
+{
     int val;
-    struct node *left, *right;
-}* searched=NULL;
-typedef struct node node;
+    struct node **left, *right;
+}
+*searched = NULL;
+typedef struct node *node *;
 
-void inorderTraversal(node *root,int x,int y) {
-    if (root != NULL) {
-        inorderTraversal(root->left,x,y);
-        if(root->val>=x&&root->val<=y)
-        printf("%d ",root->val);
-        inorderTraversal(root->right,x,y);
+void inorderTraversal(node **root, int x, int y)
+{
+    if (root != NULL)
+    {
+        inorderTraversal(root->left, x, y);
+        if (root->val >= x && root->val <= y)
+            printf("%d ", root->val);
+        inorderTraversal(root->right, x, y);
     }
 }
-node *buildTree(const char *A) { 
+node **buildTree(const char *A)
+{
     static size_t i = 0;
     i += 2;
-    if (A[i] == ')') {
+    if (A[i] == ')')
+    {
         return NULL;
     }
     size_t k = 0;
     char *temp = (char *)malloc(9 * sizeof(char));
-    node *p = (node *)malloc(sizeof(node));
+    node **p = (node **)malloc(sizeof(node *));
     k = 0;
-    while (isdigit(A[i])) {
+    while (isdigit(A[i]))
+    {
         temp[k++] = A[i++];
     }
     temp[k] = '\0';
     p->val = atoi(temp);
     ++i;
     p->left = buildTree(A);
-    do {
+    do
+    {
         i += 2;
     } while (A[i] == ')');
     p->right = buildTree(A);
     return p;
 }
-void findsum(node * root,int *sum){
-    if(root!=NULL){
-        //printf("%d ",root->val);
-        *sum=*sum+root->val;
-        findsum(root->left,sum);
-        findsum(root->right,sum);
+void findsum(node **root, int *sum)
+{
+    if (root != NULL)
+    {
+        // printf("%d ",root->val);
+        *sum = *sum + root->val;
+        findsum(root->left, sum);
+        findsum(root->right, sum);
     }
 }
-void solve(node *root,int *check,int *count){
-    if(root!=NULL){
-        int sum=0;
-        findsum(root,&sum);
-        if(*check==sum)*count=*count+1;
-        solve(root->left,check,count);
-        solve(root->right,check,count);
+void solve(node **root, int *check, int *count)
+{
+    if (root != NULL)
+    {
+        int sum = 0;
+        findsum(root, &sum);
+        if (*check == sum)
+            *count = *count + 1;
+        solve(root->left, check, count);
+        solve(root->right, check, count);
     }
 }
-int main() { 
+int main()
+{
     char *A = (char *)malloc(1000000 * sizeof(char));
     scanf("%[^\n]%*c", A);
-    node *root = buildTree(A);
-    int x,y;
-    scanf("%d%d",&x,&y);
-     inorderTraversal(root,x,y);
+    node **root = buildTree(A);
+    int x, y;
+    scanf("%d%d", &x, &y);
+    inorderTraversal(root, x, y);
     printf("\n");
     return 0;
 }

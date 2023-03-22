@@ -3,13 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 
-struct Node
+struct node *
 {
     int val;
-    struct Node *left, *right, *parent;
+    struct node **left, *right, *parent;
 };
-typedef struct Node node;
-void print(node *root)
+typedef struct node *node *;
+void print(node **root)
 {
     if (root == NULL)
         return;
@@ -18,7 +18,7 @@ void print(node *root)
     print(root->right);
 }
 
-node *built(char *str)
+node **built(char *str)
 {
     int key, temp, i;
     str += 2;
@@ -32,11 +32,11 @@ node *built(char *str)
     }
     k[i] = '\0';
     key = atoi(k);
-    node *root = (node *)malloc(sizeof(node));
+    node **root = (node **)malloc(sizeof(node *));
     root->val = key;
     str++;
     root->left = built(str);
-    node *ne = NULL;
+    node **ne = NULL;
     if (root->left)
     {
         ne = root->left;
@@ -53,7 +53,7 @@ node *built(char *str)
         str++;
     }
     str++;
-    node *right = (node *)malloc(sizeof(node));
+    node **right = (node **)malloc(sizeof(node *));
     right = built(str);
     root->right = right;
     if (root->right)
@@ -65,7 +65,7 @@ node *built(char *str)
     return root;
 }
 int count = 0;
-void solve(node *root)
+void solve(node **root)
 {
     if (root == NULL)
         return;
@@ -74,9 +74,9 @@ void solve(node *root)
         if (root->parent->parent)
         {
 
-            node *grant = root->parent->parent;
-            node *rsib = grant->right;
-            node *lsib = grant->left;
+            node **grant = root->parent->parent;
+            node **rsib = grant->right;
+            node **lsib = grant->left;
             //  printf("%d ",root->val);
             if (root->parent == grant->left && grant->right != NULL)
             {
@@ -102,7 +102,7 @@ void solve(node *root)
 
 int main()
 {
-    node *root = NULL;
+    node **root = NULL;
     char *str = (char *)malloc(sizeof(char) * 1000);
     scanf("%[^\n]s", str);
     root = built(str);

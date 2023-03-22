@@ -1,28 +1,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-struct nod
+struct node *
 {
     int key;
-    struct nod *parent,*left,*right;
+    struct node **parent, *left, *right;
 };
-typedef struct nod *node;
-struct tre
+typedef struct node **node *;
+struct Tree
 {
-    node root;
+    node *root;
 };
-typedef struct tre *tree;
-node CREATE_NODE(int k)
+typedef struct Tree *tree;
+node *CREATE_node *(int k)
 {
-    node x;
-    x = (node)malloc(sizeof(struct nod));
+    node *x;
+    x = (node *)malloc(sizeof(struct node *));
     x->key = k;
     x->left = x->parent = x->right = NULL;
     return x;
 }
-node SEARCH(tree t, int k)
+node *SEARCH(tree t, int k)
 {
-    node present;
+    node *present;
     present = t->root;
 
     while (present && present->key != k)
@@ -42,8 +42,8 @@ node SEARCH(tree t, int k)
     return present;
 }
 
-// node SEARCH(tree t,int k){
-//     node present;
+// node * SEARCH(tree t,int k){
+//     node * present;
 //     present=t->root;
 
 //     if(present->key==k){
@@ -55,7 +55,7 @@ node SEARCH(tree t, int k)
 //     }
 // }
 
-node MINIMUM(node a)
+node *MINIMUM(node *a)
 {
     if (!a)
         return NULL;
@@ -66,7 +66,7 @@ node MINIMUM(node a)
     return a;
 }
 
-node MAXIMUM(node a)
+node *MAXIMUM(node *a)
 {
     if (!a)
         return NULL;
@@ -79,7 +79,7 @@ node MAXIMUM(node a)
 
 void SUCCESSOR(tree t, int k)
 {
-    node present;
+    node *present;
     present = SEARCH(t, k);
     if (!present)
     {
@@ -88,11 +88,11 @@ void SUCCESSOR(tree t, int k)
     }
     if (present->right)
     {
-        node cur1 = MINIMUM(present->right);
+        node *cur1 = MINIMUM(present->right);
         printf("%d\n", cur1->key);
         return;
     }
-    node p;
+    node *p;
     p = present->parent;
     while (p && present == p->right)
     {
@@ -111,7 +111,7 @@ void SUCCESSOR(tree t, int k)
 
 void PREDECESSOR(tree t, int k)
 {
-    node present;
+    node *present;
     present = SEARCH(t, k);
     if (!present)
     {
@@ -120,22 +120,22 @@ void PREDECESSOR(tree t, int k)
     }
     if (present->left)
     {
-        node cur1 = MAXIMUM(present->left);
+        node *cur1 = MAXIMUM(present->left);
         printf("%d\n", cur1->key);
     }
     else
     {
-        node p;
+        node *p;
         p = present->parent;
-        if(p){
-            while (present == p->left)
+        if (p)
         {
-            present = p;
-            p = p->parent;
+            while (present == p->left)
+            {
+                present = p;
+                p = p->parent;
+            }
         }
 
-        }
-        
         if (!p)
         {
             printf("%d\n", -1);
@@ -149,9 +149,9 @@ void PREDECESSOR(tree t, int k)
 
 void INSERT(tree t, int k)
 {
-    node a;
-    a = CREATE_NODE(k);
-    node x, y;
+    node *a;
+    a = CREATE_node * (k);
+    node *x, y;
     y = NULL;
     x = t->root;
     while (x)
@@ -181,7 +181,7 @@ void INSERT(tree t, int k)
     }
 }
 
-void TRANSPLANT(tree t, node a, node b)
+void TRANSPLANT(tree t, node *a, node *b)
 {
     if (!a->parent)
     {
@@ -204,13 +204,13 @@ void TRANSPLANT(tree t, node a, node b)
 
 void DELETE(tree t, int k)
 {
-    node present = SEARCH(t, k);
+    node *present = SEARCH(t, k);
     if (!present)
     {
         printf("%d\n", -1);
         return;
     }
-    //printf("%d\n", present->key);
+    // printf("%d\n", present->key);
     if (!present->left)
     {
         TRANSPLANT(t, present, present->right);
@@ -221,7 +221,7 @@ void DELETE(tree t, int k)
     }
     else
     {
-        node cur = MINIMUM(present->right);
+        node *cur = MINIMUM(present->right);
         if (cur->parent != present)
         {
             TRANSPLANT(t, cur, cur->right);
@@ -236,8 +236,8 @@ void DELETE(tree t, int k)
 
 int LEVEL(tree t, int k)
 {
-    node present;
-    node next=present->left;
+    node *present;
+    node *next = present->left;
     int ans = 1;
     present = t->root;
     while (present && present->key != k)
@@ -259,7 +259,7 @@ int LEVEL(tree t, int k)
     return 0;
 }
 
-void intraversal(node r)
+void intraversal(node *r)
 {
     if (r)
     {
@@ -268,7 +268,7 @@ void intraversal(node r)
         intraversal(r->right);
     }
 }
-void posttravrsal(node r)
+void posttravrsal(node *r)
 {
     if (r)
     {
@@ -278,8 +278,7 @@ void posttravrsal(node r)
     }
 }
 
-
-void pretraversal(node r)
+void pretraversal(node *r)
 {
     if (r)
     {
@@ -289,14 +288,13 @@ void pretraversal(node r)
     }
 }
 
-
 int main()
 {
     tree t;
-    t = (tree)malloc(sizeof(struct tre));
+    t = (tree)malloc(sizeof(struct Tree));
     char c = 'b';
     int k, val;
-    node ptr;
+    node *ptr;
     while (c != 'e')
     {
         scanf("%c", &c);
