@@ -101,7 +101,6 @@ void print(node * root){
     print(root->left);
     print(root->right);
 }
-
 int main(){
     node * root=NULL;
     int k;

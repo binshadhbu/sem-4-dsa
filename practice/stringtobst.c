@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-struct Node
+struct node *
 {
     int val;
-    struct Node *left, *right, *parent;
+    struct node **left, *right, *parent;
 };
-typedef struct Node node;
+typedef struct node *node *;
 
-node *make(char *str)
+node **make(char *str)
 {
     int temp, i;
     str += 2;
@@ -24,7 +24,7 @@ node *make(char *str)
     }
     k[i] = '\0';
     int key = atoi(k);
-    node *root = (node *)malloc(sizeof(node));
+    node **root = (node **)malloc(sizeof(node *));
     root->val = key;
     str++;
     root->left = make(str);
@@ -39,12 +39,12 @@ node *make(char *str)
         str++;
     }
     str++;
-    node *right = make(str);
+    node **right = make(str);
     root->right = right;
     return root;
 }
 
-void print(node *root)
+void print(node **root)
 {
     if (root == NULL)
     {
@@ -56,7 +56,7 @@ void print(node *root)
 }
 int main()
 {
-    node *root = NULL;
+    node **root = NULL;
     char *str = (char *)malloc(1000 * sizeof(char));
     scanf("%[^\n]s", str);
     root = make(str);
