@@ -292,7 +292,7 @@ int main()
 {
     tree t;
     t = (tree)malloc(sizeof(struct Tree));
-    char c = 'b';
+    char c = 'B';
     int k, val;
     node *ptr;
     while (c != 'e')
@@ -347,7 +347,7 @@ int main()
                 printf("%d\n", ptr->key);
             }
             break;
-        case 'r':
+        case 'R':
             scanf(" %d", &k);
             PREDECESSOR(t, k);
             break;

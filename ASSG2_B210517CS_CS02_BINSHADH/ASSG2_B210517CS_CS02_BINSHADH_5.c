@@ -272,7 +272,7 @@ int main()
             break;
         }
 
-        case 'b':
+        case 'B':
         {
             scanf(" %d", &k);
             node ele = SEARCH(t, k);
