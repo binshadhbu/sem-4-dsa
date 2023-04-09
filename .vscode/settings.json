@@ -36,6 +36,9 @@
   "C_Cpp_Runner.useAddressSanitizer": false,
   "files.associations": {
     "*.ejs": "html",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "*.tcc": "c",
+    "string_view": "c",
+    "variant": "c"
   }
 }
